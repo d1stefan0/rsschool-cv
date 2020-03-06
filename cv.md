@@ -1,7 +1,11 @@
-1. Eugene Stefanovich
-2. email: mejogi000@gmail.com, mobile/telegram: +375296690010
-3. I would like to get some experience in a new programming language for me
-4. Skills
+# Eugene Stefanovich
+
+## Contact info
+    - e-mail: mejogi000@gmail.com
+    - mobile/telegram: +375296690010
+    - linkedin: [Eugene Stefanovich](https://www.linkedin.com/in/eugene-stefanovich-b5a2a7170/)
+
+## Skills
 - programming language - swift
 - good knowledge main tools swift development such as Xcode, Storyboard, GitHub, BitBucket and others
 - good knowledge main frameworks iOS SDK (Foundation, UIKit and others)
@@ -9,30 +13,60 @@
 - knowledge main design patterns and principles of object oriented programming
 - understanding the principles of work client-server and mobile applications 
 
-5. Сurrently studying ARKit framework
+## Code exapmles (ARKit framework)
 ```Swift
 import SceneKit
+import ARKit
 
-class VirtualObject: SCNReferenceNode {
+class Plane: SCNNode {
     
-    static let availableObjects: [SCNReferenceNode] = {
+    var anchor: ARPlaneAnchor!
+    var planeGeometry: SCNPlane!
+    
+    init(anchor: ARPlaneAnchor) {
+        self.anchor = anchor
+        super.init()
+        configure()
+    }
+    
+    private func configure() {
         
-        guard let modelsURLs = Bundle.main.url(forResource: "art.scnassets", withExtension: nil) else { return [] }
+        self.planeGeometry = SCNPlane(width: CGFloat(anchor.extent.x), height: CGFloat(anchor.extent.z))
         
-        let fileEnumirator = FileManager().enumerator(at: modelsURLs, includingPropertiesForKeys: nil)!
+        let material = SCNMaterial()
+        material.diffuse.contents = UIColor.clear // UIImage(named: "pinkWeb.png")
         
-        return fileEnumirator.compactMap{ element in
-            let url = element as! URL
-            
-            guard url.pathExtension == "scn" else { return nil }
-            
-            return VirtualObject(url: url)
-        }
-    }()
+        self.planeGeometry.materials = [material]
+        
+        self.geometry = planeGeometry
+        
+        let physicsShape = SCNPhysicsShape(geometry: self.geometry!, options: nil)
+        self.physicsBody = SCNPhysicsBody(type: .static, shape: physicsShape)
+        self.physicsBody?.categoryBitMask = BitMaskCategory.plane
+        self.physicsBody?.collisionBitMask = BitMaskCategory.box
+        self.physicsBody?.contactTestBitMask = BitMaskCategory.box
+        
+        self.position = SCNVector3(anchor.center.x, 0, anchor.center.z)
+        
+        self.transform = SCNMatrix4MakeRotation(Float(-Double.pi / 2), 1.0, 0.0, 0.0)
+    }
+    
+    func update(anchor: ARPlaneAnchor) {
+        
+        self.planeGeometry.width = CGFloat(anchor.extent.x)
+        self.planeGeometry.height = CGFloat(anchor.extent.z)
+        self.position = SCNVector3(anchor.center.x, 0, anchor.center.z)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 ```
-6.
+## Education
 
-7. Software Engineer in The Higher State College of Communication, in 2019 ended course of IOS-development in TeachMeSkills
+#### 2003-2009
+Software Engineer in The Higher State College of Communication
 
-8. Pre-Intermediate
+#### 2019
+Course of IOS-development in TeachMeSkills
